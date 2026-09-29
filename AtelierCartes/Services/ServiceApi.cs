@@ -66,7 +66,6 @@ namespace AtelierCartes.Services
             }
             catch (JsonException)
             {
-                // Le serveur a répondu avec un format non-JSON
                 erreur = null;
             }
 
