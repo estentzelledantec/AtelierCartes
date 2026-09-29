@@ -49,36 +49,44 @@ namespace AtelierCartes.Services
         #endregion
 
         #region Methodes
-
         private async Task<string> LireReponseAsync(HttpResponseMessage reponse)
         {
+            // TROU : lire le JSON de la réponse avec ReadAsStringAsync
             string json = await reponse.Content.ReadAsStringAsync();
 
+            // TROU : vérifier si la réponse indique un succès
             if (reponse.IsSuccessStatusCode)
             {
                 return json;
             }
 
+            // TROU : préparer une variable pour récupérer l'erreur API
             ErreurApi? erreur = null;
+
             try
             {
+                // TROU : transformer le JSON d'erreur en ErreurApi
                 erreur = JsonConvert.DeserializeObject<ErreurApi>(json);
             }
             catch (JsonException)
             {
+                // En cas d'erreur de format JSON, conserve erreur à null
                 erreur = null;
             }
 
+            // TROU : gérer le cas Unauthorized (401)
             if (reponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 throw new Exception("Veuillez vérifier votre connexion ou vous reconnecter.");
             }
 
+            // TROU : lever une exception avec le message d'erreur s'il est disponible
             if (erreur != null && !string.IsNullOrWhiteSpace(erreur.Message))
             {
                 throw new Exception(erreur.Message);
             }
 
+            // TROU : lever une exception générique sinon
             throw new Exception("Une erreur est survenue lors de la communication avec le serveur.");
         }
 
