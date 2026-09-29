@@ -49,6 +49,7 @@ namespace AtelierCartes.Services
         #endregion
 
         #region Methodes
+        // GET :
         private async Task<string> LireReponseAsync(HttpResponseMessage reponse)
         {
             // TROU : lire le JSON de la réponse avec ReadAsStringAsync
@@ -88,6 +89,32 @@ namespace AtelierCartes.Services
 
             // TROU : lever une exception générique sinon
             throw new Exception("Une erreur est survenue lors de la communication avec le serveur.");
+        }
+        // POST :
+        public async Task SeConnecterAsync(string identifiant, string motDePasse)
+        {
+            DemandeConnexion demande = new DemandeConnexion
+            {
+                Identifiant = identifiant,
+                MotDePasse = motDePasse
+            };
+
+            string json = JsonConvert.SerializeObject(demande);
+
+            using StringContent contenu = new StringContent(json, Encoding.UTF8, "application/json");
+
+            using HttpResponseMessage reponse = await _client.PostAsync("auth/login", contenu);
+
+            string jsonResultat = await LireReponseAsync(reponse);
+
+            ReponseConnexion? resultat = JsonConvert.DeserializeObject<ReponseConnexion>(jsonResultat);
+
+            if (resultat == null || string.IsNullOrWhiteSpace(resultat.JetonAcces))
+            {
+                throw new Exception("Jeton d'accès absent ou invalide.");
+            }
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", resultat.JetonAcces);
         }
 
         #endregion
