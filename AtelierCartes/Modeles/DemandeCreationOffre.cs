@@ -5,23 +5,14 @@ using System.Text;
 
 namespace AtelierCartes.Modeles
 {
-    internal class Offre
+    internal class DemandeCreationOffre
     {
         #region Proprietes
-
-        [JsonProperty("id")]
-        public string Identifiant { get; set; } = string.Empty;
-
         [JsonProperty("copyId")]
         public string IdentifiantExemplaire { get; set; } = string.Empty;
 
         [JsonProperty("price")]
         public decimal Prix { get; set; } = 0;
-        
-        [JsonProperty("status")]
-        public string Statut { get; set; } = string.Empty;
-
-
         #endregion
     }
 }
