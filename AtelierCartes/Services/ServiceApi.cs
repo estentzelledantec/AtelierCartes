@@ -117,11 +117,11 @@ namespace AtelierCartes.Services
             _client.DefaultRequestHeaders.Authorization = 
                 new AuthenticationHeaderValue("Bearer", resultat.JetonAcces);
         }
-        public async Task<ObservableCollection<Carte>> RecupererCartesPossedeesAsync()
+        public async Task<ObservableCollection<CartePossedee>> RecupererCartesPossedeesAsync()
         {
             using HttpResponseMessage reponse = await _client.GetAsync("cartes");
             string jsonResultat = await LireReponseAsync(reponse);
-            ObservableCollection<Carte>? cartes = JsonConvert.DeserializeObject<ObservableCollection<Carte>>(jsonResultat);
+            ObservableCollection<CartePossedee>? cartes = JsonConvert.DeserializeObject<ObservableCollection<CartePossedee>>(jsonResultat);
             if (cartes == null)
             {
                 throw new Exception("Impossible de récupérer les cartes possédées.");
